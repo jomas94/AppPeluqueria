@@ -1,13 +1,13 @@
 /** Media Queries **/
 @mixin telefono {
     @media (min-width: #{$telefono}) {
-        @content;
+        @content; //para tomar multiplos valores
     }
 }
 
 @mixin tablet {
     @media (min-width: #{$tablet}) {
-        @content;
+        @content; 
     }
 }
   

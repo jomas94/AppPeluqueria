@@ -1,0 +1,35 @@
+html{
+
+    background-color: $negro;
+}
+
+body{
+    
+}
+
+.contenedor-estetica{
+
+    @include tablet{
+        height: 100vh; //  100% del Viewport Height
+        @include grid(2, $separacion);
+
+    }
+
+    .imagen{
+        height: 30rem;
+        background-image: url('../img/1.jpg');
+        background-size: cover;
+        background-position: center;
+        
+        @include tablet{
+            height: auto; //al hacer la imagen más grande ignarará el 30rem y se pondrá automaticamentes
+        }
+    
+    }
+}
+
+.app{
+    width: 95%;
+    margin: 0 auto;
+    padding-top: $separacion/2;
+}
