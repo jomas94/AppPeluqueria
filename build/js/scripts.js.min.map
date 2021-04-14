@@ -1,1 +1,1 @@
-{"version":3,"sources":[],"names":[],"mappings":"","file":"scripts.js","sourcesContent":[]}
+{"version":3,"sources":["app.js"],"names":["iniciarApp","mostrarServicios","document","addEventListener"],"mappings":"AAMA,SAAAA,aACAC,mBAGA,SAAAA,oBATAC,SAAAC,iBAAA,oBAAA,WACAH","file":"scripts.js","sourcesContent":["\r\ndocument.addEventListener('DOMContentLoaded', function () {\r\n    iniciarApp();\r\n    \r\n});\r\n\r\nfunction iniciarApp() {\r\n    mostrarServicios();\r\n}\r\n\r\nfunction mostrarServicios() {\r\n    \r\n}"]}
