@@ -16,6 +16,45 @@ function iniciarApp() {
     //Oculta o mmuestra una seccion segun el tab al que se presiona
     cambiarSeccion();
 
+    //Paginacion 
+    paginaSiguiente();
+    paginaAnterior();
+
+    //Comprueba la pagina actual para ocultar/mostrar botones
+    botonesPaginador(); 
+}
+
+function paginaSiguiente(){
+    const paginaSiguiente = document.querySelector('#siguiente');
+    paginaSiguiente.addEventListener('click', ()=>{
+        pagina++;
+
+        console.log(pagina);
+        botonesPaginador();
+
+    });
+}
+
+function paginaAnterior() {
+    const paginaAnterior = document.querySelector('#anterior');
+    paginaAnterior.addEventListener('click', ()=>{
+        pagina--;
+
+        console.log(pagina);
+        botonesPaginador();
+    });
+}
+
+function botonesPaginador() {
+    const paginaSiguiente = document.querySelector('#siguiente');
+    const paginaAnterior = document.querySelector('#anterior');
+    
+    if(pagina === 1 ){
+        paginaAnterior.classList.add('ocultar');
+    }else if(pagina >1){
+        paginaAnterior.classList.remove('ocultar');
+
+    }
 }
 
 function mostrarSeccion() {
