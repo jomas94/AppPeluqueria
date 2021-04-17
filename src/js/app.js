@@ -24,103 +24,70 @@ function iniciarApp() {
     botonesPaginador(); 
 }
 
-function paginaSiguiente(){
-    const paginaSiguiente = document.querySelector('#siguiente');
-    paginaSiguiente.addEventListener('click', ()=>{
-        pagina++;
-
-        console.log(pagina);
-        botonesPaginador();
-
-    });
-}
-
-function paginaAnterior() {
-    const paginaAnterior = document.querySelector('#anterior');
-    paginaAnterior.addEventListener('click', ()=>{
-        pagina--;
-
-        console.log(pagina);
-        botonesPaginador();
-    });
-}
-
-function botonesPaginador() {
-    const paginaSiguiente = document.querySelector('#siguiente');
-    const paginaAnterior = document.querySelector('#anterior');
-    
-    if(pagina === 1 ){
-        paginaAnterior.classList.add('ocultar');
-    }else if(pagina >1){
-        paginaAnterior.classList.remove('ocultar');
-
-    }
-}
-
 function mostrarSeccion() {
+
+    //eliminar clase mostrar-seccion de la sección anterior
+    const seccionAnterior = document.querySelector('.mostrar-seccion');
+    if(seccionAnterior){
+        seccionAnterior.classList.remove('mostrar-seccion');
+    }
+    
     const seccionActual = document.querySelector(`#tab-${pagina}`);
     seccionActual.classList.add('mostrar-seccion');
+    
+    const tabAnterior = document.querySelector('.tabs .tabActual');
+    if(tabAnterior){
+        tabAnterior.classList.remove('tabActual');
+    }
 
     //resaltar tab actual
     const tab = document.querySelector(`[data-tab="${pagina}"]`);
     tab.classList.add('tabActual');
 }
 
-function cambiarSeccion(params) {
+function cambiarSeccion() {
     const enlaces = document.querySelectorAll('.tabs button');
-
+    
     enlaces.forEach(enlace =>{
         enlace.addEventListener('click', e =>{
             e.preventDefault();
             pagina = parseInt(e.target.dataset.tab);
-
-            //eliminar clase mostrar-seccion de la sección anterior
-            document.querySelector('.mostrar-seccion').classList.remove('mostrar-seccion');
-
-
-            //agrega mostrar-seccion donde se da el click
-            const seccion = document.querySelector(`#tab-${pagina}`);
-            seccion.classList.add('mostrar-seccion');
-
-            
-            document.querySelector('.tabActual').classList.remove('tabActual');
-
-            //agrega mostrar-seccion donde se da el click
-            const tab = document.querySelector(`[data-tab="${pagina}"]`);
-            tab.classList.add('tabActual');
-        });
-    });
+                      
+            mostrarSeccion();
+            botonesPaginador();
+        })
+    })
 }
 
 async function mostrarServicios() {
     try {
         const resultado = await fetch('./servicios.json');
         const db = await resultado.json();
-
+        
         const {servicios} = db; //destructuring - crear la vareable a la vez que se extrae el contenido de db.servicios
 
         servicios.forEach( servicio => {
             const { id, nombre, precio } = servicio;
-
+            
             //DOM scripting
-
+            
             //Genera los párafos y les añade las clases
             const nombreServicio = document.createElement('P');
             nombreServicio.textContent = nombre;
             nombreServicio.classList.add('nombre-servicio');
-
+            
             const precioServicio = document.createElement('P');
             precioServicio.textContent = `${precio}€`;
             precioServicio.classList.add('precio-servicio');
-
+            
             //genera el div de cada servicio
             const servicioDiv = document.createElement('DIV');
             servicioDiv.classList.add('servicio');
             servicioDiv.dataset.idServicio = id;
-
+            
             //seleccionar el div
             servicioDiv.onclick = seleccionarServicio;
-
+            
             //añade los párafos al div
             servicioDiv.appendChild(nombreServicio);
             servicioDiv.appendChild(precioServicio);
@@ -140,19 +107,55 @@ async function mostrarServicios() {
 function seleccionarServicio(e) {
     
     let elemento;
-
+    
     if(e.target.tagName === 'P'){
         elemento = e.target.parentElement;
     }else{
         elemento = e.target;
     }
-
+    
     if(elemento.classList.contains('seleccionado')){
         elemento.classList.remove('seleccionado');
     }else{
         elemento.classList.add('seleccionado');
         
     }
+    
+    
+}
 
+function paginaSiguiente(){
+    const paginaSiguiente = document.querySelector('#siguiente');
+    paginaSiguiente.addEventListener('click', ()=>{
+        pagina++;
 
+        botonesPaginador();
+
+    });
+}
+
+function paginaAnterior() {
+    const paginaAnterior = document.querySelector('#anterior');
+    paginaAnterior.addEventListener('click', ()=>{
+        pagina--;
+
+        botonesPaginador();
+    });
+}
+
+function botonesPaginador() {
+    const paginaSiguiente = document.querySelector('#siguiente');
+    const paginaAnterior = document.querySelector('#anterior');
+    
+    if(pagina === 1 ){
+        paginaAnterior.classList.add('ocultar');
+    }else if(pagina === 3){
+        paginaSiguiente.classList.add('ocultar');
+        paginaAnterior.classList.remove('ocultar');
+    }else {
+        paginaAnterior.classList.remove('ocultar');
+        paginaSiguiente.classList.remove('ocultar');
+    }
+
+    mostrarSeccion();
 }
