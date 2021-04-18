@@ -1,8 +1,9 @@
+
 let pagina = 1;
 
 const cita = {
     nombre: '',
-    email: '',
+    // email: '',
     fecha: '',
     hora: '',
     servicios: []
@@ -32,7 +33,7 @@ function iniciarApp() {
     botonesPaginador(); 
 
     //muestra el resumen de la cita(o error si no valida)
-    mostraResumen();
+    mostrarResumen();
 
     //Almacena el nombre de la cita en el objeto
     nombreCita();
@@ -40,6 +41,11 @@ function iniciarApp() {
     //Almacena la fecha de la cita en el objeto
     fechaCita();
     
+    //deshabilitar fecha anterior
+    deshabilitarFechaAnterior();
+
+    //validar Hora
+    horaCita();
 }
 
 function mostrarSeccion() {
@@ -157,9 +163,6 @@ function eliminarServicio(id) {
 
     const {servicios} = cita;
     cita.servicios = servicios.filter(servicio => servicio.id !== id);
-
-    console.log(cita);
-
 }
 
 function agregarServicio(servicioObj) {
@@ -167,9 +170,8 @@ function agregarServicio(servicioObj) {
     const {servicios} = cita;
 
     cita.servicios = [...servicios,servicioObj]
-    console.log(cita);
-    
 }
+
 function paginaSiguiente(){
     const paginaSiguiente = document.querySelector('#siguiente');
     paginaSiguiente.addEventListener('click', ()=>{
@@ -198,6 +200,7 @@ function botonesPaginador() {
     }else if(pagina === 3){
         paginaSiguiente.classList.add('ocultar');
         paginaAnterior.classList.remove('ocultar');
+        mostrarResumen();
     }else {
         paginaAnterior.classList.remove('ocultar');
         paginaSiguiente.classList.remove('ocultar');
@@ -206,12 +209,18 @@ function botonesPaginador() {
     mostrarSeccion();
 }
 
-function mostraResumen(){
+function mostrarResumen(){
     //destructiring
-    const {nombre, email, fecha, hora, servicios} = cita;
+    const {nombre, fecha, hora, servicios} = cita;
 
     //seleccionar resumen
     const resumenDiv = document.querySelector('.contenido-resumen');
+
+    while(resumenDiv.firstChild){
+        resumenDiv.removeChild(resumenDiv.firstChild)
+    }
+    // resumenDiv.innerHTML = '';
+
     // validacion
     if(Object.values(cita).includes('')){
         const noServicios = document.createElement('P');
@@ -220,10 +229,67 @@ function mostraResumen(){
         noServicios.classList.add('invalidar-cita');
          
         resumenDiv.appendChild(noServicios);
-
+        return;
     }
 
+    //Mostrar Resumen
+
+    const headingCita = document.createElement('H3');
+    headingCita.textContent = 'Resumen de Cita';
+
+    const nombreCita = document.createElement('P');
+    nombreCita.insertAdjacentHTML('afterbegin',`<span>Nombre:</span> ${nombre}`);
     
+    const fechaCita = document.createElement('P');
+    fechaCita.insertAdjacentHTML('afterbegin',`<span>Fecha:</span> ${fecha}`);
+
+    const horaCita = document.createElement('P');
+    horaCita.insertAdjacentHTML('afterbegin',`<span>Hora:</span> ${hora}`);
+    
+    const serviciosCita = document.createElement('DIV');
+    serviciosCita.classList.add('resumen-servicios');
+
+    const headingServicios = document.createElement('H3');
+    headingServicios.textContent = 'Resumen de Servicios';
+
+    serviciosCita.appendChild(headingServicios);
+    
+    let totalServicios=0;
+    //iterar sobre el arreglo de servicios 
+    servicios.forEach( function (servicio) {
+        const{nombre, precio} = servicio;
+        const contenedorServicio = document.createElement('DIV');
+        contenedorServicio.classList.add('contenedor-servicio');
+
+        const textoServicio = document.createElement('P');
+        textoServicio.textContent = nombre;
+
+        const precioServicio = document.createElement('P');
+        precioServicio.textContent = precio;
+        precioServicio.classList.add('precio');
+
+        const valorServicio = precio.split('€');
+        totalServicios += parseInt(valorServicio[0].trim());
+
+        contenedorServicio.appendChild(textoServicio);
+        contenedorServicio.appendChild(precioServicio);
+
+        serviciosCita.appendChild(contenedorServicio);
+    });
+
+    resumenDiv.appendChild(headingCita);
+    resumenDiv.appendChild(nombreCita);
+    resumenDiv.appendChild(fechaCita);
+    resumenDiv.appendChild(horaCita);
+    resumenDiv.appendChild(serviciosCita);
+
+    const totalAPagar = document.createElement('P');
+    totalAPagar.classList.add('total');
+    totalAPagar.insertAdjacentHTML('afterbegin',`<span>Total a Pagar: </span>${totalServicios}€`);
+
+    resumenDiv.appendChild(totalAPagar);
+
+
 }
 
 function nombreCita() {
@@ -268,6 +334,10 @@ function mostrarAlerta(mensaje, tipo) {
 
 }
 
+function emailCita(){
+    TODO
+}
+
 function fechaCita() {
     const fechaInput = document.querySelector('#fecha');
 
@@ -280,8 +350,43 @@ function fechaCita() {
             mostrarAlerta('Elegiste un dia invalido', 'error');
         }else{
             cita.fecha = fecha.value;
-            console.log('dia valido');
         }
-        console.log(cita);
     })
+}
+
+function deshabilitarFechaAnterior() {
+
+    const inputFecha = document.querySelector('#fecha');
+
+    const fechaAhora = new Date();
+    const year = fechaAhora.getFullYear();
+    const mes = fechaAhora.getMonth() +1;
+    const dia = fechaAhora.getDate();
+    const hoy = `${year}-${mes < 10 ?  `0${mes}`: mes }-${dia <10 ? `0${dia}`:dia}`;
+
+    inputFecha.min = hoy;
+}
+
+function horaCita() {
+    const inputHora = document.querySelector('#hora');
+
+    inputHora.addEventListener('input', e =>{
+
+        const horaCita = e.target.value;
+        const horas = e.target.value.split(':');
+
+        if(horas[0] < 9  || horas[0] > 19 ){
+            mostrarAlerta('Hora no es valida', 'error');
+            setTimeout(()=>{
+                
+                inputHora.value = '';
+            },3000)
+        }else{
+            cita.hora = horaCita;
+        }
+
+
+    });
+
+    
 }
