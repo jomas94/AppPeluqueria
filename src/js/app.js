@@ -1,5 +1,13 @@
 let pagina = 1;
 
+const cita = {
+    nombre: '',
+    email: '',
+    fecha: '',
+    hora: '',
+    servicios: []
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     iniciarApp();
 
@@ -22,6 +30,16 @@ function iniciarApp() {
 
     //Comprueba la pagina actual para ocultar/mostrar botones
     botonesPaginador(); 
+
+    //muestra el resumen de la cita(o error si no valida)
+    mostraResumen();
+
+    //Almacena el nombre de la cita en el objeto
+    nombreCita();
+
+    //Almacena la fecha de la cita en el objeto
+    fechaCita();
+    
 }
 
 function mostrarSeccion() {
@@ -116,14 +134,42 @@ function seleccionarServicio(e) {
     
     if(elemento.classList.contains('seleccionado')){
         elemento.classList.remove('seleccionado');
+        const id = parseInt(elemento.dataset.idServicio);
+
+
+        eliminarServicio(id);
+        
     }else{
         elemento.classList.add('seleccionado');
         
+        const servicioObj = {
+            id: parseInt(elemento.dataset.idServicio),
+            nombre: elemento.firstElementChild.textContent,
+            precio: elemento.firstElementChild.nextElementSibling.textContent
+        }
+        
+        agregarServicio(servicioObj);
+        
     }
     
-    
+}
+function eliminarServicio(id) {
+
+    const {servicios} = cita;
+    cita.servicios = servicios.filter(servicio => servicio.id !== id);
+
+    console.log(cita);
+
 }
 
+function agregarServicio(servicioObj) {
+
+    const {servicios} = cita;
+
+    cita.servicios = [...servicios,servicioObj]
+    console.log(cita);
+    
+}
 function paginaSiguiente(){
     const paginaSiguiente = document.querySelector('#siguiente');
     paginaSiguiente.addEventListener('click', ()=>{
@@ -158,4 +204,84 @@ function botonesPaginador() {
     }
 
     mostrarSeccion();
+}
+
+function mostraResumen(){
+    //destructiring
+    const {nombre, email, fecha, hora, servicios} = cita;
+
+    //seleccionar resumen
+    const resumenDiv = document.querySelector('.contenido-resumen');
+    // validacion
+    if(Object.values(cita).includes('')){
+        const noServicios = document.createElement('P');
+        noServicios.textContent = 'Faltan datos de Servicios, Hora, Fecha, Nombre o Email';
+
+        noServicios.classList.add('invalidar-cita');
+         
+        resumenDiv.appendChild(noServicios);
+
+    }
+
+    
+}
+
+function nombreCita() {
+    const nombreInput = document.querySelector('#nombre');
+
+    nombreInput.addEventListener('input', e =>{
+        const nombreTexto = e.target.value.trim();
+
+        if(nombreTexto === '' || nombreTexto.length < 3){
+            mostrarAlerta('nombreNoValido', 'error');
+        }else{
+            const alerta = document.querySelector('.alerta');
+            if(alerta) alerta.remove();
+            cita.nombre = nombreTexto;
+        }
+    });
+}
+
+function mostrarAlerta(mensaje, tipo) {
+
+    const alertaPrevia = document.querySelector('.alerta');
+    if(alertaPrevia){
+        return;
+    }
+
+    const alerta = document.createElement('DIV');
+    alerta.textContent = mensaje;
+    alerta.classList.add('alerta');
+
+    if(tipo === 'error'){
+        alerta.classList.add('error');
+    }
+
+    // insertar en el form
+    const formulario = document.querySelector('.formulario');
+    formulario.appendChild(alerta)
+
+    //eliminar alerta
+    setTimeout(() =>{
+        alerta.remove();
+    },3000);
+
+}
+
+function fechaCita() {
+    const fechaInput = document.querySelector('#fecha');
+
+    fechaInput.addEventListener('input', e => {
+        const dia = new Date(e.target.value).getUTCDay();
+
+        if([0,6].includes(dia)){
+            e.preventDefault();
+            fechaInput.value ='';
+            mostrarAlerta('Elegiste un dia invalido', 'error');
+        }else{
+            cita.fecha = fecha.value;
+            console.log('dia valido');
+        }
+        console.log(cita);
+    })
 }
