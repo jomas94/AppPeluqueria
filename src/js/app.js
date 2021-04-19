@@ -377,10 +377,10 @@ function horaCita() {
 
         if(horas[0] < 9  || horas[0] > 19 ){
             mostrarAlerta('Hora no es valida', 'error');
-            setTimeout(()=>{
+            // setTimeout(()=>{
                 
                 inputHora.value = '';
-            },3000)
+            // },3000)
         }else{
             cita.hora = horaCita;
         }
