@@ -4,4 +4,4 @@ Project using HTML, CSS(SASS/SCSS), JS and Gulp for concat, minification and map
 
 JS for the navegation tabs and to validate the form.
 
-Checkout it out <a href="https://jomas94.github.io/AppPeluqueria/index" target="_blank">here</a>
+Checkout it out <a href="https://jomas94.github.io/AppPeluqueria/" target="_blank">here</a>
