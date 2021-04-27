@@ -85,12 +85,14 @@ function cambiarSeccion() {
 
 async function mostrarServicios() {
     try {
-        const resultado = await fetch('./servicios.json');
-        const db = await resultado.json();
-        
-        const {servicios} = db; //destructuring - crear la vareable a la vez que se extrae el contenido de db.servicios
 
-        servicios.forEach( servicio => {
+        const url = 'http://localhost:5000/servicios.php';
+        const resultado = await fetch(url);
+        const db = await resultado.json();
+        console.log(db);
+        // const {servicios} = db; //destructuring - crear la vareable a la vez que se extrae el contenido de db.servicios
+
+        db.forEach( servicio => {
             const { id, nombre, precio } = servicio;
             
             //DOM scripting

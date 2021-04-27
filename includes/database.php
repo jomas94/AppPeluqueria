@@ -1,0 +1,12 @@
+<?php
+
+
+
+header('Access-Control-Allow-Origin: *');
+
+$db = mysqli_connect('localhost','root','root','appsalon');
+
+if(!$db){
+    echo "Error en la conexión";
+    exit;
+}
