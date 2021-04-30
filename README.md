@@ -4,7 +4,7 @@ Project using HTML, CSS(SASS/SCSS), JS and Gulp for concat, minification and map
 
 JS for the navegation tabs and to validate the form. 
 
-Conected to a MySQL Database to get the data about all services using PHP.
+Conected to a MySQL Database to get the data about all services using PHP 8.
 
 <!--Checkout it out <a href="https://jomas94.github.io/AppPeluqueria/" target="_blank">here</a> -->
 
