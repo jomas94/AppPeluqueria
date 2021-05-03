@@ -85,15 +85,16 @@ function cambiarSeccion() {
 
 async function mostrarServicios() {
     try {
-
-        const url = 'http://localhost:5000/servicios.php';
+        console.log("antes");
+        // const url = 'servicios.json';
+        const url = 'http://localhost:3000/servicios.php';
         const resultado = await fetch(url);
         const db = await resultado.json();
-        console.log(db);
+      
         // const {servicios} = db; //destructuring - crear la vareable a la vez que se extrae el contenido de db.servicios
-
+  
         db.forEach( servicio => {
-            const { id, nombre, precio } = servicio;
+            const { id, nombre, PRECIO } = servicio;
             
             //DOM scripting
             
@@ -103,7 +104,7 @@ async function mostrarServicios() {
             nombreServicio.classList.add('nombre-servicio');
             
             const precioServicio = document.createElement('P');
-            precioServicio.textContent = `${precio}€`;
+            precioServicio.textContent = `${PRECIO}€`;
             precioServicio.classList.add('precio-servicio');
             
             //genera el div de cada servicio
